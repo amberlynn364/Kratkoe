@@ -9,7 +9,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "format": "npx prettier --write .",
     "prepare": "husky install",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@commercetools/platform-sdk": "^4.11.0",
@@ -21,8 +22,11 @@
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.3",
     "@mui/styled-engine-sc": "^5.12.0",
+    "@mui/x-date-pickers": "^6.11.1",
     "@reduxjs/toolkit": "^1.9.5",
+    "dayjs": "^1.11.9",
     "formik": "^2.4.3",
+    "jest-css-modules-transform": "^4.4.2",
     "jest-environment-jsdom": "^29.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -32,14 +36,17 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^9.3.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.5.3",
     "@types/react": "^18.2.18",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
+    "babel-jest": "^29.6.2",
     "eslint": "^8.45.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.10.0",

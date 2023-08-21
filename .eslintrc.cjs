@@ -26,7 +26,22 @@ module.exports = {
   },
   plugins: ["react-refresh", "@typescript-eslint", "react", "prettier", "react-hooks"],
   rules: {
+    indent: "off",
+    "max-len": [
+      "error",
+      {
+        code: 120,
+        ignoreComments: true,
+        ignoreStrings: true,
+      },
+    ],
+    "react/jsx-wrap-multilines": "off",
+    "implicit-arrow-linebreak": "off",
     "import/extensions": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      { devDependencies: false, optionalDependencies: false, peerDependencies: false },
+    ],
     "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
@@ -86,7 +101,6 @@ module.exports = {
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": "warn",
     "no-unused-vars": "off",
-    "max-len": ["error", { code: 120 }],
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/no-unused-vars": "error",
   },
