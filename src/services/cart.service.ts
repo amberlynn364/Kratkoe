@@ -1,7 +1,14 @@
-import { Cart, CartRemoveLineItemAction } from "@commercetools/platform-sdk";
+import {
+  Cart,
+  CartRemoveLineItemAction,
+  CartAddDiscountCodeAction,
+  CartChangeLineItemQuantityAction,
+  ClientResponse,
+} from "@commercetools/platform-sdk";
 import { CountryCode, StatusCodes } from "../models/types";
 import getAnonymousApiRoot from "./AnonymousClient";
 import tokenCache from "./TokenCash";
+import getApiRoot from "./BuildClient";
 
 const rootApi = getAnonymousApiRoot();
 
@@ -75,7 +82,6 @@ export async function cartDeleteItem(cartId: string, version: number, productId:
   const CartRemoveItemAction: CartRemoveLineItemAction = {
     action: "removeLineItem",
     lineItemId: productId,
-    quantity: 1,
   };
 
   const updatedCartResp = await rootApi
@@ -93,4 +99,59 @@ export async function cartDeleteItem(cartId: string, version: number, productId:
   const updatedCart = updatedCartResp.body;
 
   return updatedCart;
+}
+
+const apiRoot = getApiRoot();
+
+export function getShoppingCart() {
+  return apiRoot.me().carts().get().execute();
+}
+
+export function cartChangeItemQuantity(cartId: string, version: number, itemId: string, quantity: number) {
+  const cartChangetemQuantityAction: CartChangeLineItemQuantityAction = {
+    action: "changeLineItemQuantity",
+    lineItemId: itemId,
+    quantity,
+  };
+
+  return apiRoot
+    .me()
+    .carts()
+    .withId({ ID: cartId })
+    .post({
+      body: {
+        version,
+        actions: [cartChangetemQuantityAction],
+      },
+    })
+    .execute();
+}
+
+export function getDiscount() {
+  return apiRoot.discountCodes().get().execute();
+}
+export function cartAddDiscount(cartId: string, version: number, code: string): Promise<ClientResponse<Cart>> {
+  const cartAddDiscountAction: CartAddDiscountCodeAction = {
+    action: "addDiscountCode",
+    code,
+  };
+
+  return apiRoot
+    .me()
+    .carts()
+    .withId({ ID: cartId })
+    .post({
+      body: {
+        version,
+        actions: [cartAddDiscountAction],
+      },
+    })
+    .execute();
+}
+
+export function deleteShoppingCart(cartId: string, version: number) {
+  return apiRoot.carts().withId({ ID: cartId }).delete({ queryArgs: { version } }).execute();
+}
+export function getCarts() {
+  return apiRoot.me().carts().get().execute();
 }

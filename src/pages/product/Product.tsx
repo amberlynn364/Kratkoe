@@ -14,11 +14,12 @@ import ProductAttributes from "../../components/productAttributes/ProductAttribu
 import ProductSizes from "../../components/productSizes/ProductSizes";
 import ProductPrices from "../../components/productPrices/ProductPrices";
 import Footer from "../../components/footer/Footer";
-import { addProductToCart, cartDeleteItem, createCart, getActiveCart } from "../../services/cart.service";
+import { addProductToCart, cartDeleteItem, createCart, getCarts } from "../../services/cart.service";
 import { setCount } from "../../store/features/cartCount/cartCountSlice";
 import AlertView from "../../components/alertView/AlertView";
 import { useAppDispatch } from "../../store/hooks";
 import updateActiveTimeoutWithDelay from "../../utils/updateActiveTimeoutWithDelay";
+import getProductCountFromCart from "../../utils/getProductCountFromCart";
 
 function Product() {
   const params = useParams();
@@ -43,19 +44,20 @@ function Product() {
   const handleRemoveFromCart = async () => {
     try {
       setIsRemoveBtnDisabled(true);
-      const activeCart = await getActiveCart();
+      const activeCart = (await getCarts()).body.results;
+      const currentCart = activeCart[0];
 
       let productId = "";
       if (activeCart && product) {
-        for (let i = 0; i < activeCart.lineItems.length; i += 1) {
-          if (activeCart.lineItems[i].productId === product.id) {
-            productId = activeCart.lineItems[i].id;
+        for (let i = 0; i < currentCart.lineItems.length; i += 1) {
+          if (currentCart.lineItems[i].productId === product.id) {
+            productId = currentCart.lineItems[i].id;
             break;
           }
         }
 
-        const updatedCart = await cartDeleteItem(activeCart.id, activeCart.version, productId);
-        dispatch(setCount(updatedCart.lineItems.length));
+        await cartDeleteItem(currentCart.id, currentCart.version, productId);
+        dispatch(setCount(await getProductCountFromCart()));
         handleSuccessAlert();
         setIsAddBtnDisabled(false);
       }
@@ -70,16 +72,17 @@ function Product() {
   const handleAddToCart = async () => {
     setIsAddBtnDisabled(true);
     setBtnLoading(true);
-    let activeCart = await getActiveCart();
+    const getCart = (await getCarts()).body.results;
+    let activeCart = getCart[0];
 
-    if (!activeCart) {
+    if (getCart.length < 1) {
       activeCart = await createCart();
     }
 
     if (product) {
-      const updatedCart = await addProductToCart(activeCart.id, activeCart.version, product.id);
+      await addProductToCart(activeCart.id, activeCart.version, product.id);
 
-      dispatch(setCount(updatedCart.lineItems.length));
+      dispatch(setCount(await getProductCountFromCart()));
     }
     setBtnLoading(false);
     setIsAddBtnDisabled(true);
@@ -111,10 +114,11 @@ function Product() {
         return;
       }
 
-      const cart = await getActiveCart();
+      const cart = (await getCarts()).body.results;
+      const currentCart = cart[0];
 
-      if (cart) {
-        const isProductInCart = cart.lineItems.some((item) => item.productId === product.id);
+      if (currentCart) {
+        const isProductInCart = currentCart.lineItems.some((item) => item.productId === product.id);
         setIsAddBtnDisabled(isProductInCart);
         setIsRemoveBtnDisabled(!isProductInCart);
       }

@@ -8,8 +8,8 @@ import { useAppDispatch } from "../../store/hooks";
 interface AlertViewProps {
   textContent: string;
   variant: "filled" | "outlined" | "standard";
-  severity: "success" | "error";
-  alertTitle: "Success" | "Error";
+  severity: "success" | "error" | "info";
+  alertTitle: "Success" | "Error" | "Info";
 }
 
 export default function AlertView({ textContent, variant, severity, alertTitle }: AlertViewProps) {

@@ -13,11 +13,12 @@ import locale from "../../settings";
 import { Attributes } from "../../utils/types";
 import sizeStringToNumber from "../../utils/sizeStringToNumber";
 import getAttributeLabel from "../../utils/getAttributeLabel";
-import { addProductToCart, createCart, getActiveCart } from "../../services/cart.service";
+import { addProductToCart, createCart, getCarts } from "../../services/cart.service";
 import { setCount } from "../../store/features/cartCount/cartCountSlice";
 import { useAppDispatch } from "../../store/hooks";
 import AlertView from "../alertView/AlertView";
 import updateActiveTimeoutWithDelay from "../../utils/updateActiveTimeoutWithDelay";
+import getProductCountFromCart from "../../utils/getProductCountFromCart";
 
 export default function ProductCard({ product, url, cart, setIsLoading }: IProductCardProps) {
   const [isDisabled, setIsDisabled] = useState(false);
@@ -45,13 +46,14 @@ export default function ProductCard({ product, url, cart, setIsLoading }: IProdu
       try {
         setIsLoading(true);
         setIsDisabled(true);
-        let activeCart = await getActiveCart();
+        const myCarts = (await getCarts()).body.results;
+        let activeCart = myCarts[0];
 
         if (!activeCart) {
           activeCart = await createCart();
         }
-        const updatedCart = await addProductToCart(activeCart.id, activeCart.version, product.id);
-        dispatch(setCount(updatedCart.lineItems.length));
+        await addProductToCart(activeCart.id, activeCart.version, product.id);
+        dispatch(setCount(await getProductCountFromCart()));
         setIsLoading(false);
       } catch (e) {
         setActionError("Can't add product to cart");

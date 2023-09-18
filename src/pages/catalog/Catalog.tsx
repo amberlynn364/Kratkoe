@@ -21,7 +21,7 @@ import { getAttributePath, getSortingPath } from "../../utils/getPaths";
 import { getSearchProductProjections } from "../../services/product.service";
 import { TCatalogFilterValues } from "../../models/types";
 import Footer from "../../components/footer/Footer";
-import { getActiveCart } from "../../services/cart.service";
+import { getCarts } from "../../services/cart.service";
 
 export default function Catalog() {
   const location = useLocation();
@@ -44,7 +44,9 @@ export default function Catalog() {
   const [cart, setCart] = useState<false | Cart>(false);
 
   const updateCart = async () => {
-    setCart(await getActiveCart());
+    const getCart = (await getCarts()).body.results;
+    const currentCart = getCart[0];
+    setCart(currentCart);
   };
 
   const updateProducts = async () => {
