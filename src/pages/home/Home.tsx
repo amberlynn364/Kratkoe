@@ -11,19 +11,7 @@ import { setCount } from "../../store/features/cartCount/cartCountSlice";
 import { useAppDispatch } from "../../store/hooks";
 import styles from "./Home.module.scss";
 import RouterPaths from "../../router/routes";
-
-const cards = [
-  {
-    name: "SAVE50",
-    description: "Enter the promotional code in the cart to receive a 50% discount",
-    image: "gift-svgrepo-com.svg",
-  },
-  {
-    name: "SAVE30",
-    description: "Enter the promotional code in the cart to receive a 30% discount",
-    image: "coupon-svgrepo-com.svg",
-  },
-];
+import promoCodes from "../../data/promoCodes";
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -47,14 +35,14 @@ export default function Home() {
         <div className={styles["promo-code-wrapper"]}>
           <h1 className={styles.title}>Available promo codes:</h1>
           <div className={styles["card-wrapper"]}>
-            {cards.map((card) => (
+            {promoCodes.map((promoCode) => (
               <Card
                 sx={{ maxWidth: 345 }}
-                key={card.name}
+                key={promoCode.name}
               >
                 <CardMedia
                   sx={{ height: 140, backgroundSize: "100% 100%" }}
-                  image={card.image}
+                  image={promoCode.image}
                 />
                 <CardContent>
                   <Typography
@@ -62,13 +50,13 @@ export default function Home() {
                     variant="h5"
                     component="div"
                   >
-                    {card.name}
+                    {promoCode.name}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="text.secondary"
                   >
-                    {card.description}
+                    {promoCode.description}
                   </Typography>
                 </CardContent>
                 <CardActions>
