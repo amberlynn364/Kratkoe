@@ -134,7 +134,7 @@ export default function Header() {
               textDecoration: "none",
             }}
           >
-            Kratkoe
+            KRATKOE
           </Typography>
 
           <Box className={styles.body}>
@@ -166,7 +166,7 @@ export default function Header() {
                 textDecoration: "none",
               }}
             >
-              Kratkoe
+              KRATKOE
             </Typography>
             <Box
               className={styles.icons}
